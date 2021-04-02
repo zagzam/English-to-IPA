@@ -89,7 +89,8 @@ def fetch_words(words_in, db_type="json"):
         return words
 
 
-def get_cmu(tokens_in, db_type="sql"):
+# def get_cmu(tokens_in, db_type="sql"):
+def get_cmu(tokens_in, db_type="json"):
     """query the SQL database for the words and return the phonemes in the order of user_in"""
     result = fetch_words(tokens_in, db_type)
     ordered = []
@@ -188,7 +189,7 @@ def ipa_list(words_in, keep_punct=True, stress_marks='both', db_type="sql"):
     return ipa
 
 
-def isin_cmu(word, db_type="sql"):
+def isin_cmu(word, db_type="json"):
     """checks if a word is in the CMU dictionary. Doesn't strip punctuation.
     If given more than one word, returns True only if all words are present."""
     if type(word) == str:
