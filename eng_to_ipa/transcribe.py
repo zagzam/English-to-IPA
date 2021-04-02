@@ -68,7 +68,8 @@ def _punct_replace_word(original, transcription):
     return transcription
 
 
-def fetch_words(words_in, db_type="sql"):
+# def fetch_words(words_in, db_type="sql"):
+def fetch_words(words_in, db_type="json"):
     """fetches a list of words from the database"""
     asset = ModeType(mode=db_type).mode
     if db_type.lower() == "sql":
