@@ -117,11 +117,11 @@ def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
         for word in word_list:
             # if stress_marking:
             #     word = stress.find_stress(word, type=stress_marking)
-            else:
-                if re.sub(r"\d*", "", word.replace("__IGNORE__", "")) == "":
-                    pass  # do not delete token if it's all numbers
-                else:
-                    word = re.sub("[0-9]", "", word)
+            # else:
+            #     if re.sub(r"\d*", "", word.replace("__IGNORE__", "")) == "":
+            #         pass  # do not delete token if it's all numbers
+            #     else:
+            #         word = re.sub("[0-9]", "", word)
             ipa_form = ''
             if word.startswith("__IGNORE__"):
                 ipa_form = word.replace("__IGNORE__", "")
