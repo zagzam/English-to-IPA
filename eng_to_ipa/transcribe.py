@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
 from os.path import join, abspath, dirname
-# import eng_to_ipa.stress as stress
 from collections import defaultdict
 
 
@@ -102,26 +101,13 @@ def get_cmu(tokens_in, db_type="sql"):
 
 
 def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
-    """converts the CMU word lists into IPA transcriptions"""
-
-    # symbols = {"a": "ə", "ey": "eɪ", "aa": "ɑ", "ae": "æ", "ah": "ə", "ao": "ɔ",
-    #            "aw": "aʊ", "ay": "aɪ", "ch": "tʃ", "dh": "ð", "eh": "ɛ", "er": "ər",
-    #            "hh": "h", "ih": "ɪ", "jh": "dʒ", "ng": "ŋ",  "ow": "oʊ", "oy": "ɔɪ",
-    #            "sh": "ʃ", "th": "θ", "uh": "ʊ", "uw": "u", "zh": "ʒ", "iy": "i", "y": "y"}
-
+    """converts the incompatible CMU symbols to oxford dictionary compatible format"""
     symbols = {"ʧ": "tʃ", "ʤ": "dʒ", "j": "y"}
 
     final_list = []  # the final list of IPA tokens to be returned
     for word_list in cmu_list:
         ipa_word_list = []  # the word list for each word
         for word in word_list:
-            # if stress_marking:
-            #     word = stress.find_stress(word, type=stress_marking)
-            # else:
-            #     if re.sub(r"\d*", "", word.replace("__IGNORE__", "")) == "":
-            #         pass  # do not delete token if it's all numbers
-            #     else:
-            #         word = re.sub("[0-9]", "", word)
             ipa_form = ''
             if word.startswith("__IGNORE__"):
                 ipa_form = word.replace("__IGNORE__", "")
@@ -156,7 +142,8 @@ def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
 
 def get_top(ipa_list):
     """Returns only the one result for a query. If multiple entries for words are found, only the first is used."""
-    return ' '.join([word_list[-1] for word_list in ipa_list])
+    return ' '.join([word_list[0] for word_list in ipa_list])
+    # return ' '.join([word_list[-1] for word_list in ipa_list]) # this returns the LAST RESULT!!!
 
 
 def get_all(ipa_list):
