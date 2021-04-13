@@ -108,7 +108,6 @@ def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
     for word_list in cmu_list:
         ipa_word_list = []  # the word list for each word
         for word in word_list:
-            print(word)
             ipa_form = ''
             if word.startswith("__IGNORE__"):
                 ipa_form = word.replace("__IGNORE__", "")
@@ -117,25 +116,37 @@ def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
                     if not re.sub(r"\d*", "", ipa_form) == "":
                         ipa_form += "*"
             else:
-                for piece in word.split(" "):
-                    marked = False
-                    unmarked = piece
-                    if piece[0] in ["ˈ", "ˌ"]:
-                        marked = True
-                        mark = piece[0]
-                        unmarked = piece[1:]
-                    if unmarked in symbols:
-                        if marked:
-                            ipa_form += mark + symbols[unmarked]
-                        else:
-                            ipa_form += symbols[unmarked]
 
+                for char in word:
+                    if char in symbols:
+                        ipa_form += symbols[char]
                     else:
-                        ipa_form += piece
-            swap_list = [["ˈər", "əˈr"], ["ˈie", "iˈe"]]
-            for sym in swap_list:
-                if not ipa_form.startswith(sym[0]):
-                    ipa_form = ipa_form.replace(sym[0], sym[1])
+                        ipa_form += char
+
+                # for piece in word.split(" "):
+                #     # marked = False
+                #     unmarked = piece
+                # 
+                #     if piece in symbols:
+                #         ipa_form += symbols[piece]
+                # 
+                #     if piece[0] in ["ˈ", "ˌ"]:
+                #         marked = True
+                #         mark = piece[0]
+                #         unmarked = piece[1:]
+                #     if unmarked in symbols:
+                #         if marked:
+                #             ipa_form += mark + symbols[unmarked]
+                #         else:
+                #             ipa_form += symbols[unmarked]
+                #     else:
+                #         ipa_form += piece
+            #
+            # swap_list = [["ˈər", "əˈr"], ["ˈie", "iˈe"]]
+            # for sym in swap_list:
+            #     if not ipa_form.startswith(sym[0]):
+            #         ipa_form = ipa_form.replace(sym[0], sym[1])
+
             ipa_word_list.append(ipa_form)
         final_list.append(sorted(list(set(ipa_word_list))))
     return final_list
