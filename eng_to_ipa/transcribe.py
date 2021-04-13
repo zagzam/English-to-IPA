@@ -108,6 +108,7 @@ def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
     for word_list in cmu_list:
         ipa_word_list = []  # the word list for each word
         for word in word_list:
+            print(word)
             ipa_form = ''
             if word.startswith("__IGNORE__"):
                 ipa_form = word.replace("__IGNORE__", "")
