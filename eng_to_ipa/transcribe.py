@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 from os.path import join, abspath, dirname
-import eng_to_ipa.stress as stress
+# import eng_to_ipa.stress as stress
 from collections import defaultdict
 
 
@@ -115,8 +115,8 @@ def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
     for word_list in cmu_list:
         ipa_word_list = []  # the word list for each word
         for word in word_list:
-            if stress_marking:
-                word = stress.find_stress(word, type=stress_marking)
+            # if stress_marking:
+            #     word = stress.find_stress(word, type=stress_marking)
             else:
                 if re.sub(r"\d*", "", word.replace("__IGNORE__", "")) == "":
                     pass  # do not delete token if it's all numbers
@@ -180,7 +180,7 @@ def get_all(ipa_list):
     return sorted([sent[:-1] for sent in list_all])
 
 
-def ipa_list(words_in, keep_punct=True, stress_marks='both', db_type="sql"):
+def ipa_list(words_in, keep_punct=True, stress_marks=None, db_type="sql"):
     """Returns a list of all the discovered IPA transcriptions for each word."""
     words = [preserve_punc(w.lower())[0] for w in words_in.split()] \
         if type(words_in) == str else [preserve_punc(w.lower())[0] for w in words_in]
