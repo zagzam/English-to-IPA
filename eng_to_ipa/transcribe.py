@@ -68,13 +68,12 @@ def _punct_replace_word(original, transcription):
     return transcription
 
 
-# def fetch_words(words_in, db_type="sql"):
-def fetch_words(words_in, db_type="json"):
+def fetch_words(words_in, db_type="sql"):
     """fetches a list of words from the database"""
     asset = ModeType(mode=db_type).mode
     if db_type.lower() == "sql":
         quest = "?, " * len(words_in)
-        asset.execute("SELECT word, phonemes FROM dictionary "
+        asset.execute("SELECT word, ipa FROM eng_ipa "
                       "WHERE word IN ({0})".format(quest[:-2]), words_in)
         result = asset.fetchall()
         d = defaultdict(list)
@@ -89,8 +88,7 @@ def fetch_words(words_in, db_type="json"):
         return words
 
 
-# def get_cmu(tokens_in, db_type="sql"):
-def get_cmu(tokens_in, db_type="json"):
+def get_cmu(tokens_in, db_type="sql"):
     """query the SQL database for the words and return the phonemes in the order of user_in"""
     result = fetch_words(tokens_in, db_type)
     ordered = []
@@ -105,10 +103,14 @@ def get_cmu(tokens_in, db_type="json"):
 
 def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
     """converts the CMU word lists into IPA transcriptions"""
-    symbols = {"a": "ə", "ey": "eɪ", "aa": "ɑ", "ae": "æ", "ah": "ə", "ao": "ɔ",
-               "aw": "aʊ", "ay": "aɪ", "ch": "tʃ", "dh": "ð", "eh": "ɛ", "er": "ər",
-               "hh": "h", "ih": "ɪ", "jh": "dʒ", "ng": "ŋ",  "ow": "oʊ", "oy": "ɔɪ",
-               "sh": "ʃ", "th": "θ", "uh": "ʊ", "uw": "u", "zh": "ʒ", "iy": "i", "y": "y"}
+
+    # symbols = {"a": "ə", "ey": "eɪ", "aa": "ɑ", "ae": "æ", "ah": "ə", "ao": "ɔ",
+    #            "aw": "aʊ", "ay": "aɪ", "ch": "tʃ", "dh": "ð", "eh": "ɛ", "er": "ər",
+    #            "hh": "h", "ih": "ɪ", "jh": "dʒ", "ng": "ŋ",  "ow": "oʊ", "oy": "ɔɪ",
+    #            "sh": "ʃ", "th": "θ", "uh": "ʊ", "uw": "u", "zh": "ʒ", "iy": "i", "y": "y"}
+
+    symbols = {"ʧ": "tʃ", "ʤ": "dʒ", "j": "y"}
+
     final_list = []  # the final list of IPA tokens to be returned
     for word_list in cmu_list:
         ipa_word_list = []  # the word list for each word
@@ -143,10 +145,10 @@ def cmu_to_ipa(cmu_list, mark=True, stress_marking='all'):
 
                     else:
                         ipa_form += piece
-            swap_list = [["ˈər", "əˈr"], ["ˈie", "iˈe"]]
-            for sym in swap_list:
-                if not ipa_form.startswith(sym[0]):
-                    ipa_form = ipa_form.replace(sym[0], sym[1])
+            # swap_list = [["ˈər", "əˈr"], ["ˈie", "iˈe"]]
+            # for sym in swap_list:
+            #     if not ipa_form.startswith(sym[0]):
+            #         ipa_form = ipa_form.replace(sym[0], sym[1])
             ipa_word_list.append(ipa_form)
         final_list.append(sorted(list(set(ipa_word_list))))
     return final_list
@@ -183,7 +185,7 @@ def ipa_list(words_in, keep_punct=True, stress_marks='both', db_type="sql"):
     words = [preserve_punc(w.lower())[0] for w in words_in.split()] \
         if type(words_in) == str else [preserve_punc(w.lower())[0] for w in words_in]
     cmu = get_cmu([w[1] for w in words], db_type=db_type)
-    ipa = cmu_to_ipa(cmu, stress_marking=stress_marks)
+    # ipa = cmu_to_ipa(cmu, stress_marking=stress_marks)
     if keep_punct:
         ipa = _punct_replace_word(words, ipa)
     return ipa
